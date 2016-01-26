@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .main
+    .container.container1
+      form.form-inline.input(role='form')
+        .form-group
+          label(for='name') Name:
+          input#name.form-control(type='text')
+        .form-group
+          label(for='number') Number:
+          input#number.form-control(type='text')
+        .form-group
+          label(for='email') Email:
+          input#email.form-control(type='text')
+        button.btn.btn-success.addContact(type='submit') Add Contact
+    .container.container2
+      a(href='/contactlist')
+        button.btn.btn-info.showContacts Show Contacts
+  script(src='javascripts/contactForm.js')
