@@ -4,19 +4,22 @@ function init(){
       e.stopPropagation();
       var $row = $(this).closest('tr');
       var rowid = $row.attr('id').slice(-1);
-      $.post('/contacts', {remindex: rowid});
+      $.post('/contacts/rem', {name: $row.find('.name').text(),number: $row.find('.number').text(), email: $row.find('.email').text()}).success(function(err,data){
+        console.log('rem sent');
+      });
       $row.remove();
   });
 
   $('tbody').on('click', 'tr',function(e){
     var $row = $(this).closest('tr');
-    var rowid = $row.attr('id').slice(-1);
-    $.get('/contact/' + rowid);
-    window.location = "http://localhost:3000/contact/"+rowid;
+    $.get('/contacts/show', {name: $row.find('.name').text(),number: $row.find('.number').text(), email: $row.find('.email').text()}).success(function(err,data){
+      console.log('Success showing!');
+    });
   });
 
   $.get('/contacts')
     .success(function(data){
+      console.log(data);
       var domstuff = data.map(function(input, index){
         var $button = $('<button>').addClass('btn btn-default trash btn-sm').attr('aria-label', 'Left Align').append('Remove contact');
         var $tr = $('#template').clone().attr('id', 'contact'+index);

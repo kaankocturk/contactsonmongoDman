@@ -4,6 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/contactlist', function(err) {
+  if(err) return console.log('mongo err:', err);
+  console.log('Connected to MongoDB');
+});
 
 var app = express();
 

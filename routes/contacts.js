@@ -1,37 +1,47 @@
+'use strict';
+
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 
-/* GET users listing. */
+var Contact = require('../models/contact');
+
 router.get('/', function(req, res, next) {
-  fs.readFile('./contacts.json', function(err, data) {
-    if (err) throw err;
-    var arr = JSON.parse(data);
-    res.send(arr);
+  Contact.find({}, function(err, contacts) {
+    console.log('errgettingcontacts:', err);
+    console.log('contacts:', contacts);
+    res.send(contacts);
   });
 });
 
-router.post('/', function(req,res){
-  fs.readFile('./contacts.json', function(err, data) {
-    if (err) throw err;
-    arr = JSON.parse(data);
-    console.log(req.body.remindex);
-    if(!req.body.remindex){
-      arr.push({name: req.body.name, number: req.body.number, email: req.body.email});
-      fs.writeFile('./contacts.json', JSON.stringify(arr), function(err) {
-        if (err) throw err;
-      });
-      console.log('arr : ',arr)
-      res.send(arr);
-    }
-    else{
-      arr.splice(req.body.remindex,1,'removed');
-      fs.writeFile('./contacts.json', JSON.stringify(arr), function(err) {
-        if (err) throw err;
-      });
-      res.send('bravo son!')
-    }
+router.post('/rem', function(req, res, next) {
+  console.log(req.body);
+  Contact.remove(req.body, function(err) {
+    if (!err) {
+      console.log('removed!');
+        res.send('err!');
+      }
+      else {
+        console.log('cant remove!');
+        res.send('success!');
+      }
   });
 });
+
+router.get('/show', function(req, res) {
+  Contact.find(req.body, function(err, contact) {
+    res.render('contact', contact[0]);
+  });
+});
+
+router.post('/', function(req, res) {
+  var contact = new Contact(req.body);
+  console.log('contact:', contact);
+  contact.save(function(err, savedcontact) {
+    console.log('errsavingcontact:', err);
+    console.log('savedcontact:', savedcontact);
+    res.send(savedcontact);
+  });
+});
+
 
 module.exports = router;
